@@ -98,7 +98,10 @@ const LoginPage = () => {
         setSuccess(true);
         if (redirectUrl) {
           setTimeout(() => {
-            window.location.href = redirectUrl;
+            const target = `${redirectUrl}/?login_hint=${encodeURIComponent(
+              email
+            )}&prompt=login`;
+            window.location.href = target;
           }, 2000);
         }
       }
@@ -112,7 +115,12 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center p-4 relative overflow-hidden">
       <div className="circuit-board absolute inset-0 z-0 opacity-50"></div>
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="w-full max-w-md z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md z-10"
+      >
         <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
           <div className="p-6 bg-gradient-to-r from-blue-600 to-blue-500">
             <div className="flex items-center justify-center flex-col">
@@ -161,13 +169,22 @@ const LoginPage = () => {
                     placeholder="Enter your email"
                   />
                 </div>
-                <button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 font-medium rounded-md text-sm px-5 py-2.5 text-white shadow-md">
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 font-medium rounded-md text-sm px-5 py-2.5 text-white shadow-md"
+                >
                   Next
                 </button>
               </form>
             ) : (
               // Password input step
               <form onSubmit={handleSubmit}>
+                {/* Show confirmed email above password field */}
+                <div className="mb-4">
+                  <p className="text-sm text-gray-600">Signed in as:</p>
+                  <p className="font-medium text-gray-800">{email}</p>
+                </div>
+
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-medium mb-2">Password</label>
                   <input
@@ -180,7 +197,11 @@ const LoginPage = () => {
                     placeholder="Enter your password"
                   />
                 </div>
-                <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 font-medium rounded-md text-sm px-5 py-2.5 text-white shadow-md">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 font-medium rounded-md text-sm px-5 py-2.5 text-white shadow-md"
+                >
                   {isLoading ? (
                     <span>{step === 2 ? 'VERIFYING...' : 'PROCESSING...'}</span>
                   ) : step === 2 ? (
